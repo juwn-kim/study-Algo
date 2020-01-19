@@ -1,0 +1,53 @@
+import java.util.Scanner;
+
+public class Main {
+
+    private static long[] coin = new long[23];
+
+    public static void main(String[] args) {
+
+        int k = 0;
+        while (Math.pow(10, k * 2 + 1) <= Math.pow(10, 15)) {
+            coin[k * 3] = (long)Math.pow(10, k * 2);
+            coin[k * 3 + 1] = (long)Math.pow(10, k * 2 + 1);
+            if (k * 3 + 2 < 23) {
+                coin[k * 3 + 2] = 25 * (long)Math.pow(10, k * 2);
+            }
+            k++;
+        }
+
+        Scanner sc = new Scanner(System.in);
+        int cycle = sc.nextInt();
+
+        for (int i = 0; i < cycle; i++) {
+            long amount = sc.nextLong();
+            int j = 22;
+            for (j = 22; j >=0 ; j--) {
+                if (amount > coin[j]) {
+                    break;
+                }
+            }
+            System.out.println(dp(amount, j));
+        }
+    }
+
+    private static long dp(long amount, int coinNum) {
+        if (amount == 0) {
+            return 0;
+        }
+        if (coinNum == 0) {
+            return amount;
+        }
+
+        long total = amount;
+
+        // i 는 동전 개수
+        for (int i = 0; i <= (int)amount / (int)coin[coinNum]; i++) {
+            total = Math.min(i + dp(amount - (coin[coinNum] * i), coinNum - 1), total);
+        }
+
+        return total;
+
+    }
+
+}
